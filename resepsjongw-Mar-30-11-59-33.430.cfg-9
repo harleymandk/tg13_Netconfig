@@ -1,0 +1,216 @@
+
+!
+! Last configuration change at 11:59:31 UTC Sat Mar 30 2013 by mathias
+! NVRAM config last updated at 11:59:32 UTC Sat Mar 30 2013 by mathias
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname resepsjongw
+!
+boot-start-marker
+boot-end-marker
+!
+!
+username technet privilege 15 secret 5 $1$salt$RfBQA1hGtlQqs6iuNoNgd0
+!
+!
+aaa new-model
+!
+!
+aaa group server tacacs+ authen
+ server 151.216.125.14
+!
+aaa authentication login default group tacacs+ group authen local
+aaa authentication enable default none
+!
+!
+!
+aaa session-id common
+system mtu routing 1500
+ip routing
+!
+!
+ip domain-name infra.tg13.gathering.org
+ip name-server 151.216.126.2
+ip name-server 151.216.125.2
+ip multicast-routing distributed
+ipv6 unicast-routing
+ipv6 mld snooping
+!
+!
+crypto pki trustpoint TP-self-signed-4169692416
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-4169692416
+ revocation-check none
+ rsakeypair TP-self-signed-4169692416
+!
+!
+crypto pki certificate chain TP-self-signed-4169692416
+ certificate self-signed 01 nvram:IOS-Self-Sig#3637.cer
+license boot level ipservices
+archive
+ log config
+  logging enable
+  notify syslog contenttype plaintext
+ path tftp://151.216.125.14/cfg/$h-$t.cfg
+ write-memory
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+!
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig (STP)
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause sfp-config-mismatch
+errdisable recovery cause gbic-invalid
+errdisable recovery cause l2ptguard
+errdisable recovery cause psecure-violation
+errdisable recovery cause port-mode-failure
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause mac-limit
+errdisable recovery cause vmps
+errdisable recovery cause storm-control
+errdisable recovery cause inline-power
+errdisable recovery cause arp-inspection
+errdisable recovery cause loopback
+errdisable recovery cause small-frame
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+interface Loopback0
+ ip address 151.216.127.12 255.255.255.255
+ ipv6 address 2A02:ED02:FFFF::12/128
+ ipv6 enable
+!
+interface GigabitEthernet0/1
+ switchport access vlan 104
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet0/2
+ switchport access vlan 104
+ switchport mode access
+!
+interface GigabitEthernet0/3
+ switchport access vlan 104
+ switchport mode access
+!
+interface GigabitEthernet0/4
+ switchport access vlan 104
+ switchport mode access
+!
+interface GigabitEthernet0/5
+ switchport access vlan 104
+ switchport mode access
+!
+interface GigabitEthernet0/6
+ switchport access vlan 104
+ switchport mode access
+!
+interface GigabitEthernet0/7
+ switchport access vlan 104
+ switchport mode access
+!
+interface GigabitEthernet0/8
+ switchport access vlan 104
+ switchport mode access
+!
+interface GigabitEthernet0/9
+ switchport access vlan 104
+ switchport mode access
+!
+interface GigabitEthernet0/10
+ no switchport
+ ip address 151.216.0.27 255.255.255.254
+ ip pim sparse-mode
+ ipv6 enable
+ ipv6 eigrp 60991
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan104
+ ip address 151.216.104.1 255.255.255.0
+ ip helper-address 151.216.126.2
+ ip directed-broadcast
+ ip pim sparse-mode
+ ipv6 address 2A02:ED02:104::1/64
+ ipv6 enable
+!
+!
+router eigrp 60991
+ distribute-list prefix routes-v4 in 
+ network 151.216.0.0 0.0.127.255
+ passive-interface default
+ no passive-interface GigabitEthernet0/10
+!
+ip classless
+!
+ip http server
+ip http secure-server
+ip pim rp-address 128.39.0.85
+ip mroute 128.39.0.85 255.255.255.255 151.216.0.1
+!
+!
+ip prefix-list routes-v4 description trenger ikke hele verden
+ip prefix-list routes-v4 seq 10 permit 0.0.0.0/0
+ip sla enable reaction-alerts
+logging origin-id hostname
+logging source-interface Loopback0
+logging 151.216.125.14
+access-list 10 permit 151.216.0.0 0.0.0.255
+access-list 10 permit 151.216.112.0 0.0.0.255
+access-list 10 permit 151.216.124.0 0.0.0.255
+access-list 10 permit 151.216.125.0 0.0.0.255
+access-list 10 permit 151.216.126.0 0.0.0.255
+access-list 10 permit 151.216.127.0 0.0.0.255
+ipv6 router eigrp 60991
+ distribute-list prefix-list v6-routes in
+ passive-interface default
+ no passive-interface GigabitEthernet0/10
+ redistribute connected
+!
+ipv6 router eigrp 10
+!
+!
+!
+ipv6 prefix-list v6-routes description ting vi tar paa v6
+ipv6 prefix-list v6-routes seq 10 permit ::/0
+!
+snmp-server community 2L2s06Vt3G2Y6037KhF4w71Ka2fy15rq RW 10
+snmp-server location Vikingskipet, Hamar, Norge
+snmp-server contact Tech:Net
+snmp ifmib ifindex persist
+tacacs-server host 151.216.125.14
+tacacs-server directed-request
+tacacs-server key 7 030A03535E5D137C68314F5C42363934521B0C017C1E2D2E1F32103B50550F0F58
+!
+!
+line con 0
+line vty 0 4
+ access-class 10 in
+ privilege level 15
+ transport input telnet ssh
+line vty 5 15
+ access-class 10 in
+ privilege level 15
+ transport input telnet ssh
+!
+ntp clock-period 22519400
+ntp server 81.166.44.4
+ntp server 91.189.176.203
+ntp server 158.37.91.134
+end

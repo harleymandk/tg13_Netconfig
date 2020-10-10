@@ -1,0 +1,1863 @@
+
+!
+! Last configuration change at 10:18:01 CET Fri Mar 29 2013 by mathias
+! NVRAM config last updated at 13:02:26 CET Fri Mar 29 2013 by mathias
+!
+version 15.1
+no service pad
+service timestamps debug datetime localtime
+service timestamps log datetime localtime
+service password-encryption
+service compress-config
+service counters max age 5
+!
+hostname Distro4
+!
+boot-start-marker
+license boot level entservices
+boot-end-marker
+!
+!
+vrf definition mgmtVrf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+username technet privilege 15 secret 5 $1$salt$RfBQA1hGtlQqs6iuNoNgd0
+aaa new-model
+!
+!
+aaa group server tacacs+ authen
+ server 151.216.125.14
+!
+aaa authentication login default group tacacs+ group authen local
+aaa authentication enable default none
+!
+!
+!
+!
+!
+aaa session-id common
+clock timezone CET 1 0
+clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00
+!
+ip vrf Liin-vrf
+!
+ip vrf dlink1
+ rd 1:1
+!
+ip vrf dlink10
+ rd 10:10
+!
+ip vrf dlink11
+ rd 11:11
+!
+ip vrf dlink12
+ rd 12:12
+!
+ip vrf dlink13
+ rd 13:13
+!
+ip vrf dlink14
+ rd 14:14
+!
+ip vrf dlink15
+ rd 15:15
+!
+ip vrf dlink16
+ rd 16:16
+!
+ip vrf dlink17
+ rd 17:17
+!
+ip vrf dlink18
+ rd 18:18
+!
+ip vrf dlink19
+ rd 19:19
+!
+ip vrf dlink2
+ rd 2:2
+!
+ip vrf dlink20
+ rd 20:20
+!
+ip vrf dlink3
+ rd 3:3
+!
+ip vrf dlink4
+ rd 4:4
+!
+ip vrf dlink5
+ rd 5:5
+!
+ip vrf dlink6
+ rd 6:6
+!
+ip vrf dlink7
+ rd 7:7
+!
+ip vrf dlink8
+ rd 8:8
+!
+ip vrf dlink9
+ rd 9:9
+!
+ip multicast-routing 
+ip domain-name infra.tg13.gathering.org
+ip name-server 151.216.126.2
+ip name-server 151.216.125.2
+!
+!
+ipv6 general-prefix tg13 2A02:ED02::/32
+ipv6 unicast-routing
+ipv6 mld snooping
+ipv6 multicast-routing
+ipv6 multicast rpf use-bgp
+vtp mode off
+!
+!
+!
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause sfp-config-mismatch
+errdisable recovery cause gbic-invalid
+errdisable recovery cause l2ptguard
+errdisable recovery cause psecure-violation
+errdisable recovery cause port-mode-failure
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause pppoe-ia-rate-limit
+errdisable recovery cause mac-limit
+errdisable recovery cause unicast-flood
+errdisable recovery cause vmps
+errdisable recovery cause storm-control
+errdisable recovery cause inline-power
+errdisable recovery cause arp-inspection
+errdisable recovery cause link-monitor-failure
+errdisable recovery cause oam-remote-failure
+errdisable recovery cause psp
+power redundancy-mode redundant
+port-channel load-balance src-dst-port
+!
+!
+!
+!
+!
+archive
+ log config
+  logging enable
+  notify syslog contenttype plaintext
+ path tftp://151.216.125.14/cfg/$h-$t.cfg
+ write-memory
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+redundancy
+ mode sso
+!
+vlan internal allocation policy ascending
+!
+vlan 3602
+ name AP
+!
+ip ssh version 2
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 151.216.127.21 255.255.255.255
+ ipv6 address 2A02:ED02:FFFF::21/128
+ ipv6 enable
+!
+interface Port-channel1
+ description Core
+ ip address 151.216.123.14 255.255.255.0
+ ip pim sparse-mode
+ delay 40
+ ipv6 enable
+ ipv6 eigrp 60991
+!
+interface Port-channel10
+ description D-Link e59-1; Gi1/1; Gi2/1; Gi5/1;
+ ip address 151.216.23.129 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:23C::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel11
+ description D-Link e59-2; Gi1/2; Gi2/2; Gi5/2;
+ ip address 151.216.23.193 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:23D::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel12
+ description D-Link e61-1; Gi1/3; Gi2/3; Gi5/3;
+ ip address 151.216.24.129 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:24C::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel13
+ description D-Link e61-2; Gi1/4; Gi2/4; Gi5/4;
+ ip address 151.216.24.193 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:24D::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel14
+ description D-Link e63-1; Gi1/5; Gi2/5; Gi5/5
+ ip address 151.216.25.129 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:25C::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel15
+ description D-Link e63-2; Gi1/6; Gi2/6; Gi5/6;
+ ip address 151.216.25.193 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:25D::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel16
+ description D-Link e63-3; Gi1/7; Gi2/7; Gi5/7
+ ip address 151.216.26.1 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:26A::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel17
+ description D-Link e63-4; Gi1/8; Gi2/8; Gi5/8; 
+ ip address 151.216.26.65 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:26B::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel18
+ description D-Link e65-1; Gi1/9; Gi2/9; Gi5/9; 
+ ip address 151.216.26.129 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:26C::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel19
+ description D-Link e65-2; Gi1/10; Gi2/10; Gi5/10; 
+ ip address 151.216.26.193 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:26D::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel20
+ description D-Link e65-3; Gi1/11; Gi2/11; Gi5/11; 
+ ip address 151.216.27.1 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:27A::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel21
+ description D-Link e65-4; Gi1/12; Gi2/12; Gi5/12; 
+ ip address 151.216.27.65 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:27B::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel22
+ description D-Link e67-1; Gi1/13; Gi2/13; Gi5/13; 
+ ip address 151.216.27.129 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:27C::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel23
+ description D-Link e67-2; Gi1/14; Gi2/14; Gi5/14; 
+ ip address 151.216.27.193 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:27D::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel24
+ description D-Link e67-3; Gi1/15; Gi2/15; Gi5/15; 
+ ip address 151.216.28.1 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:28A::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel25
+ description D-Link e67-4; Gi1/16; Gi2/16; Gi5/16; 
+ ip address 151.216.28.65 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:28B::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel26
+ description D-Link e69-1; Gi1/17; Gi2/17; Gi5/17;
+ ip address 151.216.28.129 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:28C::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel27
+ description D-Link e69-2; Gi1/18; Gi2/18; Gi5/18; 
+ ip address 151.216.28.193 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:28D::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel28
+ description D-Link e69-3; Gi1/19; Gi2/19; Gi5/19; 
+ ip address 151.216.29.1 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:29A::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel29
+ description D-Link e69-4; Gi1/20; Gi2/20; Gi5/20; 
+ ip address 151.216.29.65 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:29B::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel30
+ description D-Link e71-1; Gi1/21; Gi2/21; Gi5/21;
+ ip address 151.216.29.129 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:29C::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel31
+ description D-Link e71-2; Gi1/22; Gi2/22; Gi5/22; 
+ ip address 151.216.29.193 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:29D::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel32
+ description D-Link e71-3; Gi1/23; Gi2/23; Gi5/23; 
+ ip address 151.216.30.1 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:30A::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel33
+ description D-Link e71-4; Gi1/24; Gi2/24; Gi5/24; 
+ ip address 151.216.30.65 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:30B::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel34
+ description D-Link e73-1; Gi1/25; Gi2/25; Gi5/25; 
+ ip address 151.216.30.129 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:30C::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel35
+ description D-Link e73-2; Gi1/26; Gi2/26; Gi5/26; 
+ ip address 151.216.30.193 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:30D::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel36
+ description D-Link e73-3; Gi1/27; Gi2/27; Gi5/27; 
+ ip address 151.216.31.1 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:31A::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel37
+ description D-Link e73-4; Gi1/28; Gi2/28; Gi5/28;
+ ip address 151.216.31.65 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:31B::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel38
+ description D-Link e75-1; Gi1/29; Gi2/29; Gi5/29; 
+ ip address 151.216.31.129 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:31C::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel39
+ description D-Link e75-2; Gi1/30; Gi2/30; Gi5/30; 
+ ip address 151.216.31.193 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:31D::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel40
+ description D-Link e75-3; Gi1/31; Gi2/31; Gi5/31; 
+ ip address 151.216.32.1 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:32A::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel41
+ description D-Link e75-4; Gi1/32; Gi2/32; Gi5/32; 
+ ip address 151.216.32.65 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:32B::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel42
+ description D-Link e77-1; Gi1/33; Gi2/33; Gi5/33; 
+ ip address 151.216.32.129 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:32C::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface Port-channel43
+ description D-Link e77-2; Gi1/34; Gi2/34; Gi5/34; 
+ ip address 151.216.32.193 255.255.255.192
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.17
+ ip directed-broadcast
+ ip pim sparse-mode
+ logging event link-status
+ ipv6 address 2A02:ED02:32D::1/64
+ ipv6 enable
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2A02:ED02:125::2
+ ipv6 dhcp relay source-interface Loopback0
+!
+interface FastEthernet1
+ vrf forwarding mgmtVrf
+ no ip address
+ speed auto
+ duplex auto
+!
+interface GigabitEthernet1/1
+ description D-Link e59-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 10 mode passive
+!
+interface GigabitEthernet1/2
+ description D-Link e59-2; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 11 mode passive
+!
+interface GigabitEthernet1/3
+ description D-Link e61-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 12 mode passive
+!
+interface GigabitEthernet1/4
+ description D-Link e61-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 13 mode passive
+!
+interface GigabitEthernet1/5
+ description D-Link e63-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 14 mode passive
+!
+interface GigabitEthernet1/6
+ description D-Link e63-2; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 15 mode passive
+!
+interface GigabitEthernet1/7
+ description D-Link e63-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 16 mode passive
+!
+interface GigabitEthernet1/8
+ description D-Link e63-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 17 mode passive
+!
+interface GigabitEthernet1/9
+ description D-Link e65-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 18 mode passive
+!
+interface GigabitEthernet1/10
+ description D-Link e65-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 19 mode passive
+!
+interface GigabitEthernet1/11
+ description D-Link e65-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 20 mode passive
+!
+interface GigabitEthernet1/12
+ description D-Link e65-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 21 mode passive
+!
+interface GigabitEthernet1/13
+ description D-Link e67-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 22 mode passive
+!
+interface GigabitEthernet1/14
+ description D-Link e67-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 23 mode passive
+!
+interface GigabitEthernet1/15
+ description D-Link e67-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 24 mode passive
+!
+interface GigabitEthernet1/16
+ description D-Link e67-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 25 mode passive
+!
+interface GigabitEthernet1/17
+ description D-Link e69-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 26 mode passive
+!
+interface GigabitEthernet1/18
+ description D-Link e69-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 27 mode passive
+!
+interface GigabitEthernet1/19
+ description D-Link e69-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 28 mode passive
+!
+interface GigabitEthernet1/20
+ description D-Link e69-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 29 mode passive
+!
+interface GigabitEthernet1/21
+ description D-Link e71-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 30 mode passive
+!
+interface GigabitEthernet1/22
+ description D-Link e71-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 31 mode passive
+!
+interface GigabitEthernet1/23
+ description D-Link e71-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 32 mode passive
+!
+interface GigabitEthernet1/24
+ description D-Link e71-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 33 mode passive
+!
+interface GigabitEthernet1/25
+ description D-Link e73-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 34 mode passive
+!
+interface GigabitEthernet1/26
+ description D-Link e73-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 35 mode passive
+!
+interface GigabitEthernet1/27
+ description D-Link e73-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 36 mode passive
+!
+interface GigabitEthernet1/28
+ description D-Link e73-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 37 mode passive
+!
+interface GigabitEthernet1/29
+ description D-Link e75-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 38 mode passive
+!
+interface GigabitEthernet1/30
+ description D-Link e75-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 39 mode passive
+!
+interface GigabitEthernet1/31
+ description D-Link e75-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 40 mode passive
+!
+interface GigabitEthernet1/32
+ description D-Link e75-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 41 mode passive
+!
+interface GigabitEthernet1/33
+ description D-Link e77-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 42 mode passive
+!
+interface GigabitEthernet1/34
+ description D-Link e77-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 43 mode passive
+!
+interface GigabitEthernet1/35
+ shutdown
+!
+interface GigabitEthernet1/36
+ shutdown
+!
+interface GigabitEthernet1/37
+ shutdown
+!
+interface GigabitEthernet1/38
+ shutdown
+!
+interface GigabitEthernet1/39
+ shutdown
+!
+interface GigabitEthernet1/40
+ shutdown
+!
+interface GigabitEthernet1/41
+ shutdown
+!
+interface GigabitEthernet1/42
+ shutdown
+!
+interface GigabitEthernet1/43
+ shutdown
+!
+interface GigabitEthernet1/44
+ shutdown
+!
+interface GigabitEthernet1/45
+ shutdown
+!
+interface GigabitEthernet1/46
+ shutdown
+!
+interface GigabitEthernet1/47
+ shutdown
+!
+interface GigabitEthernet1/48
+ shutdown
+!
+interface GigabitEthernet2/1
+ description D-Link e59-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 10 mode passive
+!
+interface GigabitEthernet2/2
+ description D-Link e59-2; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 11 mode passive
+!
+interface GigabitEthernet2/3
+ description D-Link e61-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 12 mode passive
+!
+interface GigabitEthernet2/4
+ description D-Link e61-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 13 mode passive
+!
+interface GigabitEthernet2/5
+ description D-Link e63-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 14 mode passive
+!
+interface GigabitEthernet2/6
+ description D-Link e63-2; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 15 mode passive
+!
+interface GigabitEthernet2/7
+ description D-Link e63-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 16 mode passive
+!
+interface GigabitEthernet2/8
+ description D-Link e63-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 17 mode passive
+!
+interface GigabitEthernet2/9
+ description D-Link e65-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 18 mode passive
+!
+interface GigabitEthernet2/10
+ description D-Link e65-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 19 mode passive
+!
+interface GigabitEthernet2/11
+ description D-Link e65-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 20 mode passive
+!
+interface GigabitEthernet2/12
+ description D-Link e65-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 21 mode passive
+!
+interface GigabitEthernet2/13
+ description D-Link e67-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 22 mode passive
+!
+interface GigabitEthernet2/14
+ description D-Link e67-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 23 mode passive
+!
+interface GigabitEthernet2/15
+ description D-Link e67-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 24 mode passive
+!
+interface GigabitEthernet2/16
+ description D-Link e67-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 25 mode passive
+!
+interface GigabitEthernet2/17
+ description D-Link e69-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 26 mode passive
+!
+interface GigabitEthernet2/18
+ description D-Link e69-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 27 mode passive
+!
+interface GigabitEthernet2/19
+ description D-Link e69-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 28 mode passive
+!
+interface GigabitEthernet2/20
+ description D-Link e69-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 29 mode passive
+!
+interface GigabitEthernet2/21
+ description D-Link e71-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 30 mode passive
+!
+interface GigabitEthernet2/22
+ description D-Link e71-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 31 mode passive
+!
+interface GigabitEthernet2/23
+ description D-Link e71-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 32 mode passive
+!
+interface GigabitEthernet2/24
+ description D-Link e71-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 33 mode passive
+!
+interface GigabitEthernet2/25
+ description D-Link e73-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 34 mode passive
+!
+interface GigabitEthernet2/26
+ description D-Link e73-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 35 mode passive
+!
+interface GigabitEthernet2/27
+ description D-Link e73-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 36 mode passive
+!
+interface GigabitEthernet2/28
+ description D-Link e73-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 37 mode passive
+!
+interface GigabitEthernet2/29
+ description D-Link e75-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 38 mode passive
+!
+interface GigabitEthernet2/30
+ description D-Link e75-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 39 mode passive
+!
+interface GigabitEthernet2/31
+ description D-Link e75-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 40 mode passive
+!
+interface GigabitEthernet2/32
+ description D-Link e75-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 41 mode passive
+!
+interface GigabitEthernet2/33
+ description D-Link e77-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 42 mode passive
+!
+interface GigabitEthernet2/34
+ description D-Link e77-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 43 mode passive
+!
+interface GigabitEthernet2/35
+ shutdown
+!
+interface GigabitEthernet2/36
+ shutdown
+!
+interface GigabitEthernet2/37
+ shutdown
+!
+interface GigabitEthernet2/38
+ shutdown
+!
+interface GigabitEthernet2/39
+ shutdown
+!
+interface GigabitEthernet2/40
+ shutdown
+!
+interface GigabitEthernet2/41
+ shutdown
+!
+interface GigabitEthernet2/42
+ shutdown
+!
+interface GigabitEthernet2/43
+ shutdown
+!
+interface GigabitEthernet2/44
+ shutdown
+!
+interface GigabitEthernet2/45
+ shutdown
+!
+interface GigabitEthernet2/46
+ shutdown
+!
+interface GigabitEthernet2/47
+ shutdown
+!
+interface GigabitEthernet2/48
+ shutdown
+!
+interface TenGigabitEthernet3/1
+ description To the-one-core-to-rule-them-all.and-in-the - TenGigabitEthernet1/1/4
+ no switchport
+ no ip address
+ channel-group 1 mode active
+!
+interface TenGigabitEthernet3/2
+ description To the-one-core-to-rule-them-all.and-in-the - TenGigabitEthernet2/1/4
+ no switchport
+ no ip address
+ channel-group 1 mode active
+!
+interface TenGigabitEthernet3/3
+!
+interface TenGigabitEthernet3/4
+!
+interface TenGigabitEthernet4/1
+ description To AP-e59-2.ap-dist4.tg13.gathering.org - GigabitEthernet0.1
+ no switchport
+ no ip address
+ channel-group 1 mode active
+!
+interface TenGigabitEthernet4/2
+ description To AP-e69-3.ap-dist4.tg13.gathering.org - GigabitEthernet0.1
+ no switchport
+ no ip address
+ channel-group 1 mode active
+!
+interface TenGigabitEthernet4/3
+!
+interface TenGigabitEthernet4/4
+!
+interface GigabitEthernet5/1
+ description D-Link e59-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 10 mode passive
+!
+interface GigabitEthernet5/2
+ description D-Link e59-2; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 11 mode passive
+!
+interface GigabitEthernet5/3
+ description D-Link e61-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 12 mode passive
+!
+interface GigabitEthernet5/4
+ description D-Link e61-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 13 mode passive
+!
+interface GigabitEthernet5/5
+ description D-Link e63-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 14 mode passive
+!
+interface GigabitEthernet5/6
+ description D-Link e63-2; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 15 mode passive
+!
+interface GigabitEthernet5/7
+ description D-Link e63-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 16 mode passive
+!
+interface GigabitEthernet5/8
+ description D-Link e63-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 17 mode passive
+!
+interface GigabitEthernet5/9
+ description D-Link e65-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 18 mode passive
+!
+interface GigabitEthernet5/10
+ description D-Link e65-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 19 mode passive
+!
+interface GigabitEthernet5/11
+ description D-Link e65-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 20 mode passive
+!
+interface GigabitEthernet5/12
+ description D-Link e65-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 21 mode passive
+!
+interface GigabitEthernet5/13
+ description D-Link e67-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 22 mode passive
+!
+interface GigabitEthernet5/14
+ description D-Link e67-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 23 mode passive
+!
+interface GigabitEthernet5/15
+ description D-Link e67-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 24 mode passive
+!
+interface GigabitEthernet5/16
+ description D-Link e67-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 25 mode passive
+!
+interface GigabitEthernet5/17
+ description D-Link e69-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 26 mode passive
+!
+interface GigabitEthernet5/18
+ description D-Link e69-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 27 mode passive
+!
+interface GigabitEthernet5/19
+ description D-Link e69-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 28 mode passive
+!
+interface GigabitEthernet5/20
+ description D-Link e69-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 29 mode passive
+!
+interface GigabitEthernet5/21
+ description D-Link e71-1; RJ-45; 1G
+ no switchport
+ no ip address
+ channel-group 30 mode passive
+!
+interface GigabitEthernet5/22
+ description D-Link e71-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 31 mode passive
+!
+interface GigabitEthernet5/23
+ description D-Link e71-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 32 mode passive
+!
+interface GigabitEthernet5/24
+ description D-Link e71-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 33 mode passive
+!
+interface GigabitEthernet5/25
+ description D-Link e73-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 34 mode passive
+!
+interface GigabitEthernet5/26
+ description D-Link e73-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 35 mode passive
+!
+interface GigabitEthernet5/27
+ description D-Link e73-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 36 mode passive
+!
+interface GigabitEthernet5/28
+ description D-Link e73-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 37 mode passive
+!
+interface GigabitEthernet5/29
+ description D-Link e75-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 38 mode passive
+!
+interface GigabitEthernet5/30
+ description D-Link e75-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 39 mode passive
+!
+interface GigabitEthernet5/31
+ description D-Link e75-3; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 40 mode passive
+!
+interface GigabitEthernet5/32
+ description D-Link e75-4; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 41 mode passive
+!
+interface GigabitEthernet5/33
+ description D-Link e77-1; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 42 mode passive
+!
+interface GigabitEthernet5/34
+ description D-Link e77-2; RJ-45; 1G;
+ no switchport
+ no ip address
+ channel-group 43 mode passive
+!
+interface GigabitEthernet5/35
+ shutdown
+!
+interface GigabitEthernet5/36
+ shutdown
+!
+interface GigabitEthernet5/37
+ shutdown
+!
+interface GigabitEthernet5/38
+ shutdown
+!
+interface GigabitEthernet5/39
+ shutdown
+!
+interface GigabitEthernet5/40
+ shutdown
+!
+interface GigabitEthernet5/41
+ shutdown
+!
+interface GigabitEthernet5/42
+ shutdown
+!
+interface GigabitEthernet5/43
+ shutdown
+!
+interface GigabitEthernet5/44
+ shutdown
+!
+interface GigabitEthernet5/45
+ shutdown
+!
+interface GigabitEthernet5/46
+ shutdown
+!
+interface GigabitEthernet5/47
+ shutdown
+!
+interface GigabitEthernet5/48
+ shutdown
+!
+interface GigabitEthernet6/1
+ description AP @ D-Link e59-1; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/2
+ description AP @ D-Link e59-2; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/3
+ description AP @ D-Link e61-1; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/4
+ description AP @ D-Link e61-2; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/5
+ description AP @ D-Link e63-1; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/6
+ description AP @ D-Link e63-2; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/7
+ description AP @ D-Link e63-3; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/8
+ description AP @ D-Link e63-4; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/9
+ description AP @ D-Link e65-1; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/10
+ description AP @ D-Link e65-2; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/11
+ description AP @ D-Link e65-3; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/12
+ description AP @ D-Link e65-4; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/13
+ description AP @ D-Link e67-1; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/14
+ description AP @ D-Link e67-2; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/15
+ description AP @ D-Link e67-3; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/16
+ description AP @ D-Link e67-4; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/17
+ description AP @ D-Link e69-1; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/18
+ description AP @ D-Link e69-2; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/19
+ description AP @ D-Link e69-3; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/20
+ description AP @ D-Link e69-4; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/21
+ description AP @ D-Link e71-1; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/22
+ description AP @ D-Link e71-2; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/23
+ description AP @ D-Link e71-3; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/24
+ description AP @ D-Link e71-4; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/25
+ description AP @ D-Link e73-1; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/26
+ description AP @ D-Link e73-2; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/27
+ description AP @ D-Link e73-3; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/28
+ description AP @ D-Link e73-4; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/29
+ description AP @ D-Link e75-1; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/30
+ description AP @ D-Link e75-2; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/31
+ description AP @ D-Link e75-3; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/32
+ description AP @ D-Link e75-4; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/33
+ description AP @ D-Link e77-1; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/34
+ description AP @ D-Link e77-2; RJ-45; 1G;
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet6/35
+ shutdown
+!
+interface GigabitEthernet6/36
+ shutdown
+!
+interface GigabitEthernet6/37
+ shutdown
+!
+interface GigabitEthernet6/38
+ shutdown
+!
+interface GigabitEthernet6/39
+ shutdown
+!
+interface GigabitEthernet6/40
+ shutdown
+!
+interface GigabitEthernet6/41
+ shutdown
+!
+interface GigabitEthernet6/42
+ shutdown
+!
+interface GigabitEthernet6/43
+ shutdown
+!
+interface GigabitEthernet6/44
+ shutdown
+!
+interface GigabitEthernet6/45
+ shutdown
+!
+interface GigabitEthernet6/46
+ shutdown
+!
+interface GigabitEthernet6/47
+ shutdown
+!
+interface GigabitEthernet6/48
+ description AP @ Distro4
+ switchport access vlan 3602
+ switchport mode access
+ logging event link-status
+ spanning-tree bpduguard enable
+!
+interface Vlan1
+ ip address dhcp
+!
+interface Vlan3602
+ ip address 151.216.117.1 255.255.255.192
+ ip access-group PROTECT_APS out
+ ip helper-address 151.216.126.2
+ ip helper-address 151.216.125.21
+!
+!
+router eigrp 60991
+ variance 3
+ default-metric 10000 1 255 1 1500
+ network 151.216.0.0 0.0.127.255
+ redistribute connected
+ passive-interface default
+ no passive-interface Port-channel1
+!
+no ip forward-protocol udp netbios-ns
+no ip forward-protocol udp netbios-dgm
+ip forward-protocol udp 2350
+ip forward-protocol udp 3979
+ip forward-protocol udp 6111
+ip forward-protocol udp 6112
+ip forward-protocol udp 9004
+ip forward-protocol udp 9100
+ip forward-protocol udp 10777
+ip forward-protocol udp 22000
+ip forward-protocol udp 22001
+ip forward-protocol udp 22002
+ip forward-protocol udp 22003
+ip forward-protocol udp 22004
+ip forward-protocol udp 22005
+ip forward-protocol udp 22006
+ip forward-protocol udp 22007
+ip forward-protocol udp 22008
+ip forward-protocol udp 22009
+ip forward-protocol udp 22010
+ip forward-protocol udp 23073
+ip forward-protocol udp 26000
+ip forward-protocol udp 26900
+ip forward-protocol udp 26901
+ip forward-protocol udp 26902
+ip forward-protocol udp 26903
+ip forward-protocol udp 27015
+ip forward-protocol udp 27016
+ip forward-protocol udp 27017
+ip forward-protocol udp 27666
+ip forward-protocol udp 27910
+ip forward-protocol udp 27950
+ip forward-protocol udp 27960
+ip forward-protocol udp 27961
+ip forward-protocol udp 28004
+ip forward-protocol udp 28960
+ip forward-protocol udp 29900
+ip forward-protocol udp 5246
+no ip http server
+no ip http secure-server
+ip pim rp-address 128.39.0.85
+ip mroute 128.39.0.85 255.255.255.255 151.216.0.1
+!
+!
+ip access-list extended PROTECT_APS
+ permit ip 151.216.124.0 0.0.3.255 any
+ deny   ip any any
+!
+logging origin-id hostname
+logging source-interface Loopback0
+logging host 151.216.125.14
+access-list 10 permit 151.216.124.0 0.0.0.255
+access-list 10 permit 151.216.125.0 0.0.0.255
+access-list 10 permit 151.216.126.0 0.0.0.255
+access-list 10 permit 151.216.127.0 0.0.0.255
+ipv6 pim rp-address 2A02:ED02:FFFF::A
+ipv6 router eigrp 60991
+ maximum-paths 4
+ variance 3
+ redistribute connected
+ default-metric 10000 1 255 1 1500
+!
+!
+snmp-server community 2L2s06Vt3G2Y6037KhF4w71Ka2fy15rq RW 10
+snmp-server location Vikingskipet, Hamar, Norge
+snmp-server contact Tech:Net
+snmp ifmib ifindex persist
+!
+tacacs-server host 151.216.125.14
+tacacs-server directed-request
+tacacs-server key 7 104051415D45203B2A3C7C72710C010D74222033572C4E5554665236521B400E53
+!
+!
+!
+ipv6 access-list mngt
+ permit ipv6 2A02:ED02:124::/64 any
+ permit ipv6 2A02:ED02:125::/64 any
+ permit ipv6 2A02:ED02:126::/64 any
+ permit ipv6 2A02:ED02:FF00::/120 any
+ deny ipv6 any any
+!
+alias exec cabletest test cable tdr interface
+alias exec result show cable tdr interface
+alias exec power show power inline
+alias exec down show etherchannel summary | i \(s\)|\(D\)
+!
+line con 0
+ exec-timeout 60 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ access-class 10 in
+ exec-timeout 60 0
+ privilege level 15
+ logging synchronous
+ ipv6 access-class mngt in
+ transport input telnet ssh
+line vty 5 15
+ access-class 10 in
+ exec-timeout 60 0
+ privilege level 15
+ logging synchronous
+ ipv6 access-class mngt in
+ transport input telnet ssh
+line vty 16
+!
+ntp server 2001:700:100:2::6
+ntp server 129.240.2.6
+end

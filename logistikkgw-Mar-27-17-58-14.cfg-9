@@ -1,0 +1,548 @@
+
+!
+! Last configuration change at 09:16:02 CET Wed Mar 27 2013 by havnyhus
+! NVRAM config last updated at 17:58:13 CET Wed Mar 27 2013 by havnyhus
+!
+version 15.1
+no service pad
+service timestamps debug datetime localtime
+service timestamps log datetime localtime
+service password-encryption
+service compress-config
+service counters max age 5
+!
+hostname logistikkgw
+!
+boot-start-marker
+boot system bootflash:cat4500e-entservicesk9-mz.151-2.SG.bin
+boot-end-marker
+!
+!
+vrf definition mgmtVrf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+username technet privilege 15 secret 5 $1$salt$RfBQA1hGtlQqs6iuNoNgd0
+aaa new-model
+!
+!
+aaa group server tacacs+ authen
+ server 151.216.125.14
+!
+aaa authentication login default group tacacs+ group authen local
+aaa authentication enable default none
+!
+!
+!
+!
+!
+aaa session-id common
+clock timezone CET 1 0
+clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00
+!
+ip multicast-routing 
+ip domain-name infra.tg13.gathering.org
+ip name-server 151.216.126.2
+ip name-server 151.216.125.2
+ip dhcp excluded-address 151.216.0.1
+!
+!
+ip igmp snooping querier address 1.1.1.1        
+ip igmp snooping querier
+ipv6 general-prefix tg13 2A02:ED02::/32
+ipv6 unicast-routing
+ipv6 mld snooping
+ipv6 multicast-routing
+ipv6 multicast rpf use-bgp
+vtp mode off
+!
+!
+!
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause sfp-config-mismatch
+errdisable recovery cause gbic-invalid
+errdisable recovery cause l2ptguard
+errdisable recovery cause psecure-violation
+errdisable recovery cause port-mode-failure
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause pppoe-ia-rate-limit
+errdisable recovery cause mac-limit
+errdisable recovery cause unicast-flood
+errdisable recovery cause vmps
+errdisable recovery cause storm-control
+errdisable recovery cause inline-power
+errdisable recovery cause arp-inspection
+errdisable recovery cause link-monitor-failure
+errdisable recovery cause oam-remote-failure
+errdisable recovery cause psp
+power redundancy-mode redundant
+!
+!
+!
+!
+!
+archive
+ log config
+  logging enable
+  notify syslog contenttype plaintext
+ path tftp://151.216.125.14/cfg/$h-$t.cfg
+ write-memory
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 12
+ name RTSPS
+!
+vlan 20
+ name FFSPU
+!
+vlan 96
+ name Logistikk
+!
+vlan 600
+ name Deutsche-Bourse-sim
+!
+ip ssh version 2
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 151.216.127.6 255.255.255.255
+ ip pim sparse-mode
+ ipv6 address 2A02:ED02:FFFF::6/128
+ ipv6 enable
+!
+interface FastEthernet1
+ vrf forwarding mgmtVrf
+ no ip address
+ speed auto
+ duplex auto
+!
+interface GigabitEthernet1/1
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/2
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/3
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/4
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/5
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/6
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/7
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/8
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/9
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/10
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/11
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/12
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/13
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/14
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/15
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/16
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/17
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/18
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/19
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/20
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/21
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/22
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/23
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/24
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/25
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/26
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/27
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/28
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/29
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/30
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/31
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/32
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/33
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/34
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/35
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/36
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/37
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/38
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/39
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/40
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/41
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/42
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/43
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/44
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/45
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/46
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/47
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface GigabitEthernet1/48
+ description Logistikk Klientnett
+ switchport access vlan 96
+ switchport mode access
+ spanning-tree portfast
+!
+interface TenGigabitEthernet1/49
+ description To camgw.infra.tg13.gathering.org - TenGigabitEthernet1/50
+ no switchport
+ ip address 151.216.0.47 255.255.255.254
+ ip pim sparse-mode
+ ipv6 unnumbered Loopback0
+ ipv6 enable
+ ipv6 eigrp 60991
+!
+interface TenGigabitEthernet1/50
+ description To wtfgw.infra.tg13.gathering.org - TenGigabitEthernet1/52
+ no switchport
+ ip address 151.216.0.18 255.255.255.254
+ ip pim sparse-mode
+ ipv6 enable
+ ipv6 eigrp 60991
+!
+interface TenGigabitEthernet1/51
+!
+interface TenGigabitEthernet1/52
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan96
+ description Logistikk Klientnett
+ ip address 151.216.96.1 255.255.255.0
+ ip helper-address 151.216.126.2
+ ip directed-broadcast
+ ip pim sparse-mode
+ ipv6 address 2A02:ED02:96::1/64
+ ipv6 enable
+!
+!
+router eigrp 60991
+ variance 3
+ default-metric 10000 1 255 1 1500
+ network 151.216.0.0 0.0.127.255
+ redistribute connected
+ passive-interface default
+ no passive-interface TenGigabitEthernet1/49
+ no passive-interface TenGigabitEthernet1/50
+ eigrp router-id 151.216.127.6
+!
+no ip http server
+no ip http secure-server
+ip pim rp-address 128.39.0.85
+ip mroute 128.39.0.85 255.255.255.255 151.216.0.1
+!
+!
+!
+logging origin-id hostname
+logging source-interface Loopback0
+logging host 151.216.125.14
+access-list 10 permit 151.216.0.0 0.0.0.255
+access-list 10 permit 151.216.112.0 0.0.0.255
+access-list 10 permit 151.216.124.0 0.0.0.255
+access-list 10 permit 151.216.125.0 0.0.0.255
+access-list 10 permit 151.216.126.0 0.0.0.255
+access-list 10 permit 151.216.127.0 0.0.0.255
+ipv6 pim rp-address 2A02:ED02:FFFF::A
+ipv6 router eigrp 60991
+ maximum-paths 4
+ passive-interface default
+ no passive-interface TenGigabitEthernet1/49
+ no passive-interface TenGigabitEthernet1/50
+ eigrp router-id 151.216.127.6
+ variance 3
+ redistribute connected
+ default-metric 10000 1 255 1 1500
+!
+!
+!
+snmp-server community 2L2s06Vt3G2Y6037KhF4w71Ka2fy15rq RW 10
+snmp-server location Vikingskipet, Hamar, Norge
+snmp-server contact Tech:Net
+snmp ifmib ifindex persist
+tacacs-server host 151.216.125.14
+tacacs-server directed-request
+tacacs-server key 7 02085C0353543D116A765F40503320335A350D0E70052B392E26012E5202000E53
+!
+!
+!
+ipv6 access-list mngt
+ permit ipv6 2A02:ED02:124::/64 any
+ permit ipv6 2A02:ED02:125::/64 any
+ permit ipv6 2A02:ED02:126::/64 any
+ permit ipv6 2A02:ED02:FF00::/120 any
+!
+!
+line con 0
+ exec-timeout 60 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ access-class 10 in
+ exec-timeout 60 0
+ privilege level 15
+ ipv6 access-class mngt in
+ logging synchronous
+ transport input telnet ssh
+line vty 5 15
+ access-class 10 in
+ exec-timeout 60 0
+ privilege level 15
+ ipv6 access-class mngt in
+ logging synchronous
+ transport input telnet ssh
+!
+ntp server 2A02:A18:7510:200::
+ntp server 91.189.176.203
+ntp server 81.166.44.4
+ntp server 158.37.91.134
+end

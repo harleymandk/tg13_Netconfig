@@ -1,0 +1,910 @@
+
+!
+! Last configuration change at 17:53:51 CET Sat Mar 30 2013 by karlsen
+! NVRAM config last updated at 17:58:27 CET Sat Mar 30 2013 by karlsen
+!
+version 12.2
+service timestamps debug datetime localtime
+service timestamps log datetime localtime
+service password-encryption
+service counters max age 5
+!
+hostname telegw
+!
+boot-start-marker
+boot system flash sup-bootdisk:s72033-adventerprisek9_wan-mz.122-33.SXJ5.bin
+boot-end-marker
+!
+vrf definition sekret
+ rd 60991:2
+ route-target export 60991:2
+ route-target import 60991:2
+ !
+ address-family ipv4
+ route-target export 60991:2
+ route-target import 60991:2
+ exit-address-family
+!
+security passwords min-length 1
+!
+username technet privilege 15 secret 5 $1$salt$RfBQA1hGtlQqs6iuNoNgd0
+aaa new-model
+!
+!
+aaa group server tacacs+ authen
+ server 151.216.125.14
+!
+aaa authentication login default group tacacs+ group authen local
+aaa authentication enable default none
+!
+!
+!
+aaa session-id common
+clock timezone CET 1
+clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00
+analysis module 9 management-port 1 access-vlan 126
+!
+!
+!
+ip multicast-routing 
+ip ssh version 2
+ip domain-lookup source-interface Loopback0
+ip domain-name infra.tg13.gathering.org
+ip name-server 8.8.8.8
+ipv6 unicast-routing
+ipv6 multicast-routing
+vtp mode off
+mls netflow interface
+mls qos 10g-only
+!
+!
+!
+!
+!
+!
+!
+!
+!
+archive
+ log config
+  logging enable
+  notify syslog contenttype plaintext
+ path tftp://151.216.125.14/cfg/$h-$t.cfg
+ write-memory
+!
+spanning-tree mode rapid-pvst
+spanning-tree portfast edge default
+!
+mac access-list extended davel2
+ permit any any 86DD 0
+diagnostic bootup level minimal
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause gbic-invalid
+errdisable recovery cause l2ptguard
+errdisable recovery cause psecure-violation
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause mac-limit
+errdisable recovery cause unicast-flood
+errdisable recovery cause vmps
+errdisable recovery cause storm-control
+errdisable recovery cause arp-inspection
+errdisable recovery cause link-monitor-failure
+errdisable recovery cause oam-remote-failure critical-event
+errdisable recovery cause oam-remote-failure dying-gasp
+errdisable recovery cause oam-remote-failure link-fault
+errdisable recovery cause loopback
+errdisable recovery cause mlacp-minlink
+access-list 10 permit 151.216.0.0 0.0.0.255
+access-list 10 permit 151.216.112.0 0.0.0.255
+access-list 10 permit 151.216.124.0 0.0.0.255
+access-list 10 permit 151.216.125.0 0.0.0.255
+access-list 10 permit 151.216.126.0 0.0.0.255
+access-list 10 permit 151.216.127.0 0.0.0.255
+!
+redundancy
+ main-cpu
+  auto-sync running-config
+ mode sso
+!
+ip access-list standard DEFAULT
+ permit 0.0.0.0
+!
+ip access-list extended block-that-shit
+ deny   tcp any any eq smtp
+ permit ip 185.12.59.0 0.0.0.3 any
+ permit ip 151.216.0.0 0.0.128.255 any
+ permit ip 31.169.55.0 0.0.0.255 any
+ip access-list extended dave
+ permit ip 151.216.0.0 0.0.127.255 0.0.0.0 255.255.15.255
+ permit ip 0.0.0.0 255.255.15.255 151.216.0.0 0.0.127.255
+ip access-list extended deny-tele-to-noc-eigrp
+ deny   eigrp host 151.216.123.15 any
+ permit ip any any
+ip access-list extended steamorigin
+ remark TEST
+ permit ip 151.216.0.0 0.0.127.255 158.37.91.0 0.0.0.255
+ remark ORIGIN
+ permit ip 151.216.0.0 0.0.127.255 23.15.8.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 23.21.0.0 0.0.255.255
+ permit ip 151.216.0.0 0.0.127.255 23.23.0.0 0.0.255.255
+ permit ip 151.216.0.0 0.0.127.255 23.32.241.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 23.46.0.0 0.0.255.255
+ permit ip 151.216.0.0 0.0.127.255 50.16.0.0 0.0.255.255
+ permit ip 151.216.0.0 0.0.127.255 50.17.0.0 0.0.255.255
+ permit ip 151.216.0.0 0.0.127.255 54.225.0.0 0.0.255.255
+ permit ip 151.216.0.0 0.0.127.255 81.21.146.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 107.20.244.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 120.29.145.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 124.40.32.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 125.56.200.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 164.177.139.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 184.73.0.0 0.0.255.255
+ permit ip 151.216.0.0 0.0.127.255 204.236.239.0 0.0.0.255
+ remark STEAM
+ permit ip 151.216.0.0 0.0.127.255 72.165.61.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 81.171.115.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 87.248.217.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 103.28.54.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 146.66.152.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 205.185.220.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 208.64.200.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 209.197.0.0 0.0.255.255
+ permit ip 151.216.0.0 0.0.127.255 212.187.201.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 23.8.146.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 46.137.77.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 50.16.209.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 50.16.231.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 50.17.243.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 54.225.239.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 54.243.145.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 54.243.68.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 65.52.155.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 77.88.106.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 82.96.58.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 94.245.71.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 160.68.205.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 174.129.219.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 184.28.17.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 184.73.220.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 204.245.63.0 0.0.0.255
+ permit ip 151.216.0.0 0.0.127.255 204.236.234.0 0.0.0.255
+!
+!
+vlan access-map dave 10
+ match mac address davel2
+ action forward
+vlan access-map dave 20
+ match ip address dave
+ action forward
+!
+vlan filter dave vlan-list  500
+vlan internal allocation policy ascending
+vlan access-log ratelimit 2000
+!
+vlan 98
+ name presse
+!
+vlan 104
+ name "klientnett resep"
+!
+vlan 112
+ name Security
+!
+vlan 126
+ name "Tele servernett"
+!
+vlan 500
+ remote-span
+!
+vlan 920
+ name Sec-Lukket
+lldp run
+!
+class-map match-any MBD
+  description Matcher pakker fra MBDserver
+  match any 
+!
+!
+policy-map DHCP-MBD-IPHELPER
+  class MBD
+   set dscp cs7
+!
+!
+! 
+!
+!
+!
+interface Loopback0
+ ip address 151.216.127.1 255.255.255.255
+ ip pim sparse-mode
+ ipv6 address 2A02:ED02:FFFF::1/128
+ ipv6 enable
+!
+interface Port-channel1
+ description The intrawebz!
+ mtu 1548
+ ip address 185.12.59.2 255.255.255.252
+ ip pim sparse-mode
+ load-interval 30
+ ipv6 address 2A02:ED01::2/64
+ ipv6 enable
+ no mls qos channel-consistency
+!
+interface Port-channel2
+ description Nocgw
+ mtu 1548
+ ip address 151.216.0.2 255.255.255.254
+ ip policy route-map nat-madness
+ ipv6 enable
+ ipv6 eigrp 60991
+ mpls ip
+!
+interface Port-channel3
+ description To The-one-core-to-rule-them-all
+ ip address 151.216.123.1 255.255.255.0
+ ip access-group deny-tele-to-noc-eigrp in
+ ip pim sparse-mode
+ ip policy route-map nat-madness
+ load-interval 30
+ delay 2
+ ipv6 address 2A02:ED02:123::1/64
+ ipv6 enable
+ ipv6 traffic-filter deny-tele-to-noc-eigrp-v6 in
+ ipv6 eigrp 60991
+!
+interface Port-channel11
+ no ip address
+!
+interface Port-channel12
+ no ip address
+ shutdown
+!
+interface Tunnel31337
+ description GRE til wannabe for origin
+ ip address 151.216.0.56 255.255.255.254
+ tunnel source Loopback0
+ tunnel destination 151.216.125.6
+!
+interface GigabitEthernet1/1
+ description Tele servernett
+ switchport
+ switchport access vlan 126
+ switchport mode access
+ mls qos trust dscp
+ service-policy input DHCP-MBD-IPHELPER
+!
+interface GigabitEthernet1/2
+ description Tele Servernett
+ switchport
+ switchport access vlan 126
+ switchport mode access
+!
+interface GigabitEthernet1/3
+ switchport
+ switchport access vlan 126
+ switchport mode access
+ spanning-tree portfast edge
+!
+interface GigabitEthernet1/4
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/5
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/6
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/7
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/8
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/9
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/10
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/11
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/12
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/13
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/14
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/15
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/16
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/17
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/18
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/19
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/20
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/21
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/22
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/23
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/24
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/25
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/26
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/27
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/28
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/29
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/30
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/31
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/32
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/33
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/34
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/35
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/36
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/37
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/38
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/39
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/40
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/41
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/42
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/43
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/44
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/45
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1/46
+ description To resepsjongw.infra.tg13.gathering.org - GigabitEthernet0/10
+ bandwidth 1000
+ ip address 151.216.0.26 255.255.255.254
+ ip pim sparse-mode
+ ipv6 enable
+ ipv6 eigrp 60991
+!
+interface GigabitEthernet1/47
+ description To medicsw.infra.tg13.gathering.org - GigabitEthernet0/10
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 112,920
+ switchport mode trunk
+!
+interface GigabitEthernet1/48
+ description To secsw01.infra.tg13.gathering.org - GigabitEthernet0/24
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 112,920
+ switchport mode trunk
+!
+interface GigabitEthernet2/1
+ no ip address
+!
+interface GigabitEthernet2/2
+ no ip address
+!
+interface GigabitEthernet2/3
+ no ip address
+!
+interface GigabitEthernet2/4
+ no ip address
+!
+interface GigabitEthernet2/5
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/6
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/7
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/8
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/9
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/10
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/11
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/12
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/13
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/14
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/15
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/16
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/17
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/18
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/19
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/20
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/21
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/22
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/23
+ no ip address
+ shutdown
+!
+interface GigabitEthernet2/24
+ switchport
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 98
+ switchport mode trunk
+!
+interface TenGigabitEthernet3/1
+ description To nocgw.infra.tg13.gathering.org - TenGigabitEthernet2/1
+ mtu 1548
+ no ip address
+ channel-group 2 mode active
+!
+interface TenGigabitEthernet3/2
+ description To the-one-core-to-rule-them-all.and-in-the - TenGigabitEthernet1/1/1
+ no ip address
+ channel-group 3 mode active
+!
+interface TenGigabitEthernet3/3
+ no ip address
+ shutdown
+!
+interface TenGigabitEthernet3/4
+ description To dig-osl.blix.eu - TransPacket
+ mtu 1548
+ no ip address
+ load-interval 30
+ channel-group 1 mode active
+!
+interface TenGigabitEthernet4/1
+ description To nocgw.infra.tg13.gathering.org - TenGigabitEthernet1/1
+ mtu 1548
+ no ip address
+ channel-group 2 mode active
+!
+interface TenGigabitEthernet4/2
+ description To the-one-core-to-rule-them-all.and-in-the - TenGigabitEthernet2/1/1
+ no ip address
+ channel-group 3 mode active
+!
+interface TenGigabitEthernet4/3
+ no ip address
+ shutdown
+!
+interface TenGigabitEthernet4/4
+ description To camgw.infra.tg13.gathering.org - TenGigabitEthernet1/49
+ ip address 151.216.0.4 255.255.255.254
+ ip pim sparse-mode
+ ip policy route-map nat-madness
+ ipv6 unnumbered Loopback0
+ ipv6 enable
+ ipv6 eigrp 60991
+!
+interface GigabitEthernet5/1
+ no ip address
+ shutdown
+!
+interface GigabitEthernet5/2
+ no ip address
+ shutdown
+!
+interface GigabitEthernet5/3
+ no ip address
+ shutdown
+!
+interface TenGigabitEthernet5/4
+ description To dig-osl.blix.eu - TransPacket
+ mtu 1548
+ no ip address
+ load-interval 30
+ channel-group 1 mode active
+!
+interface TenGigabitEthernet5/5
+ description To dig-osl.blix.eu - TenGigabitEthernet2/15
+ mtu 1548
+ no ip address
+ load-interval 30
+ channel-group 1 mode active
+!
+interface GigabitEthernet6/1
+ no ip address
+ shutdown
+!
+interface GigabitEthernet6/2
+ no ip address
+ shutdown
+!
+interface GigabitEthernet6/3
+ no ip address
+ shutdown
+!
+interface TenGigabitEthernet6/4
+ description Eksperimentell davespan
+ switchport
+ switchport access vlan 126
+ switchport mode access
+ load-interval 30
+!
+interface TenGigabitEthernet6/5
+ description borked
+ no ip address
+ shutdown
+!
+interface TenGigabitEthernet7/1
+ description Dave span
+ switchport
+ switchport access vlan 126
+ switchport mode access
+ spanning-tree portfast edge
+!
+interface TenGigabitEthernet7/2
+ description Dave span
+ switchport
+ switchport access vlan 126
+ switchport mode access
+ spanning-tree portfast edge
+!
+interface TenGigabitEthernet7/3
+ no ip address
+ shutdown
+!
+interface TenGigabitEthernet7/4
+ no ip address
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan98
+ description presseklient
+ ip address 151.216.98.1 255.255.255.0
+ ip helper-address 151.216.126.2
+ ip directed-broadcast
+ ip pim sparse-mode
+ ipv6 address 2A02:ED02:98::1/64
+ ipv6 enable
+!
+interface Vlan112
+ description Klientnett Security
+ ip address 151.216.112.1 255.255.255.0
+ ip directed-broadcast
+ ip pim sparse-mode
+ ip igmp snooping querier
+ ipv6 address 2A02:ED02:112::1/64
+ ipv6 enable
+!
+interface Vlan126
+ description NOC Servernett
+ ip address 151.216.126.1 255.255.255.0
+ ip directed-broadcast
+ ip pim sparse-mode
+ ip igmp query-interval 30
+ ip igmp snooping querier
+ ipv6 address 2A02:ED02:126::1/64
+ ipv6 enable
+ ipv6 nd prefix default 600 300 no-autoconfig
+!
+interface Vlan500
+ no ip address
+ shutdown
+!
+interface Vlan920
+ vrf forwarding sekret
+ ip address 192.168.2.1 255.255.255.0
+!
+!
+router eigrp 60991
+ variance 3
+ default-metric 10000 1 255 1 1500
+ no default-information out
+ network 31.169.55.0 0.0.0.255
+ network 151.216.0.0 0.0.127.255
+ redistribute connected
+ redistribute bgp 60991 metric 30000000 1 255 1 9216 route-map DEFAULT
+ passive-interface default
+ no passive-interface TenGigabitEthernet4/4
+ no passive-interface GigabitEthernet2/24
+ no passive-interface GigabitEthernet1/46
+ no passive-interface Port-channel3
+ no passive-interface Port-channel2
+ eigrp router-id 151.216.127.1
+!
+router bgp 60991
+ bgp router-id 151.216.127.1
+ bgp log-neighbor-changes
+ neighbor 2A02:ED01::1 remote-as 50304
+ neighbor 151.216.127.2 remote-as 60991
+ neighbor 151.216.127.2 update-source Loopback0
+ neighbor 185.12.59.1 remote-as 50304
+ !
+ address-family ipv4
+  no neighbor 2A02:ED01::1 activate
+  neighbor 151.216.127.2 activate
+  neighbor 151.216.127.2 next-hop-self
+  neighbor 185.12.59.1 activate
+  distance 165 0.0.0.0 0.0.0.0
+  no auto-summary
+  no synchronization
+  network 31.169.55.0 mask 255.255.255.0
+  network 151.216.0.0 mask 255.255.128.0
+  aggregate-address 151.216.0.0 255.255.128.0
+ exit-address-family
+ !
+ address-family vpnv4
+  neighbor 151.216.127.2 activate
+  neighbor 151.216.127.2 send-community extended
+ exit-address-family
+ !
+ address-family ipv6
+  neighbor 2A02:ED01::1 activate
+  neighbor 151.216.127.2 activate
+  neighbor 151.216.127.2 next-hop-self
+  network 2A02:ED02::/32
+  aggregate-address 2A02:ED02::/32
+  no synchronization
+ exit-address-family
+ !
+ address-family ipv6 multicast
+  neighbor 151.216.127.2 activate
+ exit-address-family
+ !
+ address-family ipv4 vrf sekret
+  redistribute connected
+  no synchronization
+ exit-address-family
+!
+ip classless
+ip forward-protocol nd
+ip route 10.0.0.0 255.0.0.0 Null0
+ip route 151.216.0.0 255.255.128.0 Null0
+ip route 172.16.0.0 255.240.0.0 Null0
+ip route 192.168.0.0 255.255.0.0 Null0
+!
+!
+no ip http server
+no ip http secure-server
+ip pim rp-address 128.39.0.85
+ip mroute 128.39.0.85 255.255.255.255 151.216.0.1
+!
+logging origin-id hostname
+logging source-interface Loopback0
+logging 151.216.126.11
+ipv6 route 2A02:ED02::/32 Null0
+ipv6 router eigrp 60991
+ maximum-paths 4
+ passive-interface default
+ no passive-interface Port-channel2
+ no passive-interface TenGigabitEthernet4/4
+ no passive-interface GigabitEthernet2/24
+ no passive-interface GigabitEthernet1/46
+ no passive-interface Port-channel3
+ eigrp router-id 151.216.127.1
+ variance 3
+ redistribute connected
+ redistribute bgp 60991 metric 30000000 1 255 1 9216 route-map DEFAULTV6
+ default-metric 10000 1 255 1 1500
+!
+ipv6 router eigrp 10
+ eigrp stub summary
+ redistribute eigrp 60991
+!
+ipv6 pim rp-address 2A02:ED02:FFFF::A
+!
+!
+ipv6 prefix-list DEFAULTV6 seq 5 permit ::/0
+route-map DEFAULTV6 permit 10
+ match ipv6 address prefix-list DEFAULTV6
+!
+route-map nat-madness permit 10
+ match ip address steamorigin
+ set ip next-hop 151.216.0.57
+!
+route-map DEFAULT permit 10
+ match ip address DEFAULT
+!
+snmp-server community 2L2s06Vt3G2Y6037KhF4w71Ka2fy15rq RW 10
+snmp-server ifindex persist
+snmp-server location Vikingskipet, Hamar, Norge
+snmp-server contact Tech:Net
+snmp ifmib ifindex persist
+tacacs-server host 151.216.125.14
+tacacs-server directed-request
+tacacs-server key 7 104051415D45203B2A3C7C72710C010D74222033572C4E5554665236521B400E53
+!
+mpls ldp router-id Loopback0
+!
+ipv6 access-list mngt
+ permit ipv6 2A02:ED02:124::/64 any
+ permit ipv6 2A02:ED02:125::/64 any
+ permit ipv6 2A02:ED02:126::/64 any
+ permit ipv6 2A02:ED02:FF00::/120 any
+!
+ipv6 access-list DEFAULTV6
+ permit ipv6 any any
+!
+ipv6 access-list deny-tele-to-noc-eigrp-v6
+ deny 88 host FE80::21E:13FF:FEBF:32C0 any
+ permit 88 any any
+ permit ipv6 any any
+!
+ipv6 access-list davev6
+ permit ipv6 any any
+!
+control-plane
+!
+!
+dial-peer cor custom
+!
+!
+!
+!
+line con 0
+ exec-timeout 60 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ exec-timeout 60 0
+ privilege level 15
+ logging synchronous
+ ipv6 access-class mngt in
+ transport input ssh
+line vty 5 15
+ exec-timeout 60 0
+ privilege level 15
+ logging synchronous
+ ipv6 access-class mngt in
+ transport input ssh
+!
+!
+monitor session 1 source interface Po1
+monitor session 1 destination analysis-module 9 data-port 1
+monitor session 2 source interface Po1
+monitor session 2 destination remote vlan 500 
+monitor session 3 destination interface Te6/4
+monitor session 3 source remote vlan 500 
+ntp server 151.216.126.3
+ntp server 81.166.44.4
+!
+end
